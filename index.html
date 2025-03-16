@@ -70,88 +70,74 @@
 </style>
 
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Todo List</title>
-    <div id="app">
-      <div class="todo-container">
-        <div class="todo-header">
-          <h1>Todo List</h1>
-        </div>
-        <input
-          type="text"
-          class="todo-input"
-          placeholder="新增代辦事項"
-          @keydown.enter="addTodo"
-          v-model="inputText"
-        />
-        <ul class="todo-list">
-          <li
-            class="todo-item"
-            :class="{completed: todo.completed}"
-            v-for="todo in todoList"
-          >
-            <input
-              type="checkbox"
-              class="todo-checkbox"
-              v-model="todo.completed"
-            />
-            {{todo.text}}
-            <button
-              class="todo-delete"
-              @click="todoList.splice(todoList.indexOf(todo), 1)"
-            >
-              Delete
-            </button>
-          </li>
-        </ul>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Todo List</title>
+  <div id="app">
+    <div class="todo-container">
+      <div class="todo-header">
+        <h1>Todo List</h1>
       </div>
+      <input type="text" class="todo-input" placeholder="新增代辦事項" @keydown.enter="addTodo" v-model="inputText" />
+      <ul class="todo-list">
+        <li class="todo-item" :class="{completed: todo.completed}" v-for="todo in todoList">
+          <input type="checkbox" class="todo-checkbox" v-model="todo.completed" />
+          {{todo.text}}
+          <button class="todo-delete" @click="todoList.splice(todoList.indexOf(todo), 1)">
+            Delete
+          </button>
+        </li>
+      </ul>
     </div>
-    <script type="module">
-      import {
-        createApp,
-        ref,
-        watch,
-      } from "https://cdnjs.cloudflare.com/ajax/libs/vue/3.5.13/vue.esm-browser.min.js";
+  </div>
+  <script type="module">
+    import {
+      createApp,
+      ref,
+      watch,
+    } from "https://cdnjs.cloudflare.com/ajax/libs/vue/3.5.13/vue.esm-browser.min.js";
 
-      // 初始化，從 localStorage 讀取數據
-      const todosString = localStorage.getItem("todos");
-      const todos = todosString ? JSON.parse(todosString) : {};
+    // 初始化，從 localStorage 讀取數據
+    const todosString = localStorage.getItem("todos");
+    const todos = todosString ? JSON.parse(todosString) : [];
 
-      createApp({
-        setup() {
-          const todoList = ref(todos);
+    createApp({
+      setup() {
+        const todoList = ref(todos);
 
-          const inputText = ref("");
+        const inputText = ref("");
 
-          const addTodo = () => {
-            todoList.value.push({
-              id: Date.now(),
-              text: inputText.value,
-              completed: false,
-            });
-            inputText.value = "";
-          };
+        const addTodo = () => {
+          todoList.value.push({
+            id: Date.now(),
+            text: inputText.value,
+            completed: false,
+          });
+          inputText.value = "";
+        };
 
-          // 觀測集合變化，寫入 localStorage
-          watch(
-            // 觀測目標
-            todoList,
+        // 觀測集合變化，寫入 localStorage
+        watch(
+          // 觀測目標
+          todoList,
 
-            // 當資料變化時執行的方法
-            () => {
-              localStorage.setItem("todos", JSON.stringify(todoList.value));
-            },
+          // 當資料變化時執行的方法
+          () => {
+            localStorage.setItem("todos", JSON.stringify(todoList.value));
+          },
 
-            // 深層觀測
-            { deep: true }
-          );
+          // 深層觀測
+          { deep: true }
+        );
 
-          return { todoList, inputText, addTodo };
-        },
-      }).mount("#app");
-    </script>
-  </head>
-  <body></body>
+        return { todoList, inputText, addTodo };
+      },
+    }).mount("#app");
+  </script>
+</head>
+
+<body></body>
+
 </html>
